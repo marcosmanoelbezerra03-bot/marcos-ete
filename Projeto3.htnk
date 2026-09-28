@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Média</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background:
+                radial-gradient(circle at top left, #6366f1 0%, transparent 35%),
+                radial-gradient(circle at bottom right, #06b6d4 0%, transparent 35%),
+                #0f172a;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            color: white;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .icon {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            font-size: 30px;
+            background: linear-gradient(135deg, #6366f1, #06b6d4);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .notas {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .nota {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nota input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            outline: none;
+            background: #1e293b;
+            color: white;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .nota input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .remover {
+            width: 48px;
+            border: none;
+            border-radius: 12px;
+            background: #ef4444;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+
+        .remover:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .botoes {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.25s;
+        }
+
+        .adicionar {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            background: #334155;
+            color: white;
+        }
+
+        .adicionar:hover {
+            background: #475569;
+            transform: translateY(-2px);
+        }
+
+        .calcular {
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            color: white;
+            background: linear-gradient(135deg, #6366f1, #06b6d4);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+        }
+
+        .calcular:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.35);
+        }
+
+        .resultado {
+            display: none;
+            margin-top: 25px;
+            padding: 25px;
+            text-align: center;
+            border-radius: 18px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            animation: aparecer 0.4s ease;
+        }
+
+        .resultado.show {
+            display: block;
+        }
+
+        .resultado h2 {
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .media {
+            font-size: 52px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #818cf8, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 15px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .aprovado {
+            color: #4ade80;
+            background: rgba(34, 197, 94, 0.12);
+        }
+
+        .recuperacao {
+            color: #facc15;
+            background: rgba(234, 179, 8, 0.12);
+        }
+
+        .reprovado {
+            color: #f87171;
+            background: rgba(239, 68, 68, 0.12);
+        }
+
+        .info {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .botoes {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <header class="header">
+            <div class="icon">📊</div>
+            <h1>Calculadora de Média</h1>
+            <p class="subtitle">
+                Digite suas notas e descubra sua média
+            </p>
+        </header>
+
+        <section class="notas" id="notas">
+
+            <div class="nota">
+                <input type="number" min="0" max="10" step="0.1"
+                       placeholder="Digite a nota">
+                <button class="remover" onclick="removerNota(this)">×</button>
+            </div>
+
+            <div class="nota">
+                <input type="number" min="0" max="10" step="0.1"
+                       placeholder="Digite a nota">
+                <button class="remover" onclick="removerNota(this)">×</button>
+            </div>
+
+        </section>
+
+        <div class="botoes">
+            <button class="adicionar" onclick="adicionarNota()">
+                + Adicionar nota
+            </button>
+
+            <button class="calcular" onclick="calcularMedia()">
+                Calcular média
+            </button>
+        </div>
+
+        <section class="resultado" id="resultado">
+            <h2>SUA MÉDIA</h2>
+
+            <div class="media" id="media">
+                0,00
+            </div>
+
+            <span class="status" id="status">
+                —
+            </span>
+
+            <div class="info">
+                <span id="quantidade">0 notas</span>
+                <span id="total">Total: 0</span>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const notasContainer = document.getElementById("notas");
+        const resultado = document.getElementById("resultado");
+        const mediaElement = document.getElementById("media");
+        const statusElement = document.getElementById("status");
+        const quantidadeElement = document.getElementById("quantidade");
+        const totalElement = document.getElementById("total");
+
+        function adicionarNota() {
+            const div = document.createElement("div");
+
+            div.classList.add("nota");
+
+            div.innerHTML = `
+                <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.1"
+                    placeholder="Digite a nota"
+                >
+
+                <button
+                    class="remover"
+                    onclick="removerNota(this)"
+                >
+                    ×
+                </button>
+            `;
+
+            notasContainer.appendChild(div);
+
+            div.querySelector("input").focus();
+        }
+
+        function removerNota(botao) {
+            const notas = document.querySelectorAll(".nota");
+
+            if (notas.length <= 1) {
+                alert("Você precisa ter pelo menos uma nota.");
+                return;
+            }
+
+            botao.parentElement.remove();
+        }
+
+        function calcularMedia() {
+            const inputs = document.querySelectorAll(".nota input");
+
+            let notas = [];
+
+            inputs.forEach(input => {
+                const valor = parseFloat(input.value);
+
+                if (!isNaN(valor)) {
+                    notas.push(valor);
+                }
+            });
+
+            if (notas.length === 0) {
+                alert("Digite pelo menos uma nota válida.");
+                return;
+            }
+
+            const total = notas.reduce(
+                (soma, nota) => soma + nota,
+                0
+            );
+
+            const media = total / notas.length;
+
+            mediaElement.textContent = media.toFixed(2).replace(".", ",");
+
+            totalElement.textContent =
+                `Total: ${total.toFixed(2).replace(".", ",")}`;
+
+            quantidadeElement.textContent =
+                `${notas.length} ${notas.length === 1 ? "nota" : "notas"}`;
+
+            statusElement.className = "status";
+
+            if (media >= 7) {
+                statusElement.textContent = "✓ Aprovado";
+                statusElement.classList.add("aprovado");
+            } else if (media >= 5) {
+                statusElement.textContent = "⚠ Recuperação";
+                statusElement.classList.add("recuperacao");
+            } else {
+                statusElement.textContent = "✕ Reprovado";
+                statusElement.classList.add("reprovado");
+            }
+
+            resultado.classList.add("show");
+        }
+    </script>
+
+</body>
+</html>
