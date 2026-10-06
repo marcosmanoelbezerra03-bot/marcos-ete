@@ -1,0 +1,151 @@
+// ===== Lógica de dados =====
+const perguntas = [
+  {
+    pergunta: "Qual tag HTML é usada para criar um link?",
+    opcoes: ["<link>", "<a>", "<href>", "<url>"],
+    correta: 1
+  },
+  {
+    pergunta: "Qual propriedade CSS muda a cor do texto?",
+    opcoes: ["background", "font-style", "color", "text-size"],
+    correta: 2
+  },
+  {
+    pergunta: "Qual método seleciona um elemento pelo id no JavaScript?",
+    opcoes: [
+      "document.getElementById()",
+      "document.queryAll()",
+      "document.findId()",
+      "window.selectId()"
+    ],
+    correta: 0
+  },
+  {
+    pergunta: "Qual palavra-chave declara uma constante em JavaScript?",
+    opcoes: ["var", "let", "static", "const"],
+    correta: 3
+  },
+  {
+    pergunta: "O que significa a sigla DOM?",
+    opcoes: [
+      "Document Object Model",
+      "Data Order Management",
+      "Digital Online Menu",
+      "Display Object Module"
+    ],
+    correta: 0
+  }
+];
+
+let pontuacao = 0;
+let indiceAtual = 0;
+let respondeu = false;
+
+// ===== Elementos =====
+const telaQuiz = document.getElementById("tela-quiz");
+const telaFinal = document.getElementById("tela-final");
+const elPergunta = document.getElementById("pergunta");
+const elOpcoes = document.getElementById("opcoes");
+const elFeedback = document.getElementById("feedback");
+const elBarra = document.getElementById("barra");
+const elContador = document.getElementById("contador");
+const elPontos = document.getElementById("pontos-topo");
+const btnProxima = document.getElementById("btn-proxima");
+const btnReiniciar = document.getElementById("btn-reiniciar");
+const elNota = document.getElementById("nota");
+const elMensagemFinal = document.getElementById("mensagem-final");
+
+// ===== Troca de conteúdo (DOM) =====
+function mostrarPergunta() {
+  const atual = perguntas[indiceAtual];
+  respondeu = false;
+
+  elPergunta.textContent = atual.pergunta;
+  elContador.textContent = `Pergunta ${indiceAtual + 1} de ${perguntas.length}`;
+  elBarra.style.width = `${(indiceAtual / perguntas.length) * 100}%`;
+  elPontos.textContent = `Pontos: ${pontuacao}`;
+  elFeedback.textContent = "";
+  elFeedback.className = "mensagem-feedback";
+  btnProxima.hidden = true;
+  btnProxima.textContent =
+    indiceAtual === perguntas.length - 1 ? "Ver resultado" : "Próxima";
+
+  elOpcoes.innerHTML = "";
+  atual.opcoes.forEach((texto, i) => {
+    const botao = document.createElement("button");
+    botao.className = "opcao";
+    botao.textContent = texto;
+    botao.addEventListener("click", () => verificarResposta(i)); // evento de clique
+    elOpcoes.appendChild(botao);
+  });
+}
+
+// ===== Verificação de resposta =====
+function verificarResposta(escolhida) {
+  if (respondeu) return;
+  respondeu = true;
+
+  const correta = perguntas[indiceAtual].correta;
+  const botoes = elOpcoes.querySelectorAll(".opcao");
+
+  botoes.forEach((b) => (b.disabled = true));
+  botoes[correta].classList.add("certa");
+
+  if (escolhida === correta) {
+    pontuacao++;
+    elFeedback.textContent = "✅ Resposta correta!";
+    elFeedback.classList.add("certo");
+  } else {
+    botoes[escolhida].classList.add("errada");
+    elFeedback.textContent = "❌ Resposta errada!";
+    elFeedback.classList.add("errado");
+  }
+
+  elPontos.textContent = `Pontos: ${pontuacao}`;
+  elBarra.style.width = `${((indiceAtual + 1) / perguntas.length) * 100}%`;
+  btnProxima.hidden = false;
+}
+
+function proximaPergunta() {
+  indiceAtual++;
+  if (indiceAtual < perguntas.length) {
+    mostrarPergunta();
+  } else {
+    mostrarResultado();
+  }
+}
+
+// ===== Finalização =====
+function mostrarResultado() {
+  telaQuiz.hidden = true;
+  telaFinal.hidden = false;
+  elContador.textContent = "Quiz finalizado";
+  elBarra.style.width = "100%";
+
+  const total = perguntas.length;
+  elNota.textContent = `${pontuacao} / ${total}`;
+
+  const percentual = pontuacao / total;
+  let mensagem;
+  if (percentual === 1) {
+    mensagem = "🏆 Perfeito! Você domina o assunto!";
+  } else if (percentual >= 0.6) {
+    mensagem = "👏 Muito bem! Mais um pouco de estudo e você chega lá.";
+  } else {
+    mensagem = "📚 Continue estudando e tente novamente!";
+  }
+  elMensagemFinal.textContent = mensagem;
+}
+
+function reiniciar() {
+  pontuacao = 0;
+  indiceAtual = 0;
+  telaFinal.hidden = true;
+  telaQuiz.hidden = false;
+  mostrarPergunta();
+}
+
+btnProxima.addEventListener("click", proximaPergunta);
+btnReiniciar.addEventListener("click", reiniciar);
+
+mostrarPergunta();
