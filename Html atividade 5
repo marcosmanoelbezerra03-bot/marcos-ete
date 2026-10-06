@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz de Disciplina</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="quiz">
+    <header class="quiz-header">
+      <h1>Quiz de Disciplina</h1>
+      <span class="badge" id="pontos-topo">Pontos: 0</span>
+    </header>
+
+    <div class="progresso" aria-hidden="true">
+      <div class="progresso-barra" id="barra"></div>
+    </div>
+    <p class="contador" id="contador"></p>
+
+    <!-- Tela das perguntas -->
+    <section id="tela-quiz">
+      <h2 id="pergunta"></h2>
+      <div class="opcoes" id="opcoes"></div>
+      <p class="mensagem-feedback" id="feedback"></p>
+      <button class="btn" id="btn-proxima" hidden>Próxima</button>
+    </section>
+
+    <!-- Tela do resultado final -->
+    <section id="tela-final" hidden>
+      <h2>Resultado Final</h2>
+      <p class="nota" id="nota"></p>
+      <p class="mensagem-final" id="mensagem-final"></p>
+      <button class="btn" id="btn-reiniciar">Reiniciar</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
